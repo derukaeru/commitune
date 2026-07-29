@@ -1,0 +1,18 @@
+@font-face {
+    font-family: "space-mono";
+    src: "space-mono.ttf";
+}
+
+* {
+    font-family: "space-mono", monospace;
+}
+
+body {
+    background-color: #ffffee;
+}
+
+#main-container {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
