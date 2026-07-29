@@ -4,6 +4,8 @@
 }
 
 * {
+    /*font-family: Helvetica, sans-serif;*/
+    font-weight: bold;
     font-family: "space-mono", monospace;
 }
 
@@ -15,4 +17,30 @@ body {
     display: grid;
     align-items: center;
     justify-content: center;
+    row-gap: 4vh;
+    margin-top: 25vh;
+}
+
+#title-heading {
+    background-color: darkseagreen;
+    color: #ffffee;
+
+    text-align: center;
+    font-size: 32px;
+
+    width: 200px;
+    height: 40px;
+    justify-self: center;
+}
+
+#link-input {
+    border: 0;
+    background-color: #fff;
+    width: 20vw;
+}
+
+#link-input:focus {
+    border-style: none;
+    outline: none;
+    box-shadow: none;
 }
