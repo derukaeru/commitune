@@ -2,16 +2,17 @@
 <html>
     <head>
         <title>commitune</title>
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="./assets/styles.css">
     </head>
     <body>
-        <script src="main.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.9.17/Tone.js"></script>
+        <script src="./assets/main.js" defer></script>
         <div id="main-container">
-            <div id="title-heading">
-                commitune
-            </div>
+            <div id="title-heading">commitune</div>
+            <input type="text" id="link-input" placeholder="https://github.com/user/repo" onchange="set_github_repo()">
+            <div id="controls=container">
 
-            <input type="text" id="link-input" placeholder="https://github.com/user/repo">
+            </div>
         </div>
     </body>
 </html>
