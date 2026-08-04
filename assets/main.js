@@ -8,27 +8,27 @@ var owner = "";
 var repo = "";
 var branch = "";
 
-var repo_data
+var repo_data;
 
-var accent_color = "#382b26"
-var main_color = "#b8c2b9"
+var accent_color = "#382b26";
+var main_color = "#b8c2b9";
 
 play_button.addEventListener("click", () => {
-  play_button.style.backgroundColor = accent_color
-  play_button.style.color = main_color
+  play_button.style.backgroundColor = accent_color;
+  play_button.style.color = main_color;
 
-  stop_button.style.backgroundColor = main_color
-  stop_button.style.color = accent_color
+  stop_button.style.backgroundColor = main_color;
+  stop_button.style.color = accent_color;
 
   play();
 });
 
 stop_button.addEventListener("click", () => {
-  stop_button.style.backgroundColor = accent_color
-  stop_button.style.color = main_color
+  stop_button.style.backgroundColor = accent_color;
+  stop_button.style.color = main_color;
 
-  play_button.style.backgroundColor = main_color
-  play_button.style.color = accent_color
+  play_button.style.backgroundColor = main_color;
+  play_button.style.color = accent_color;
 
   stop();
 });
@@ -69,7 +69,7 @@ async function set_repo_link() {
 async function get_repo_data() {
   if (owner.length <= 0 || repo.length <= 0 || branch.length <= 0) throw Error(`owner, repo or branch are not valid`);
   let page = 1;
-  let per_page = 9;
+  let per_page = 11;
 
   const list_res = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/commits?sha=${branch}&per_page=${per_page}&page=${page}`
@@ -97,11 +97,4 @@ async function get_repo_data() {
   );
 
   return commits;
-}
-
-function create_tune() {
-  if (!repo_data || repo_data.length === 0) {
-    console.log("no repo data");
-    return
-  }
 }

@@ -81,3 +81,13 @@ body {
     border-radius: 1px;
     border-width: 0;
 }
+
+#author {
+    position: absolute;
+
+    bottom: 0;
+    right: 8px;
+
+    color: var(--accent-color);
+    font-size: 10px;
+}
