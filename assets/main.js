@@ -8,68 +8,100 @@ var owner = "";
 var repo = "";
 var branch = "";
 
-play_button.addEventListener("click", () => {
-  play_button.style.backgroundColor = "darkseagreen"
-  play_button.style.color = "#ffffee"
+var repo_data
 
-  stop_button.style.backgroundColor = "#ffffee"
-  stop_button.style.color = "darkseagreen"
+var accent_color = "#382b26"
+var main_color = "#b8c2b9"
+
+play_button.addEventListener("click", () => {
+  play_button.style.backgroundColor = accent_color
+  play_button.style.color = main_color
+
+  stop_button.style.backgroundColor = main_color
+  stop_button.style.color = accent_color
+
+  play();
 });
 
 stop_button.addEventListener("click", () => {
-  stop_button.style.backgroundColor = "darkseagreen"
-  stop_button.style.color = "#ffffee"
+  stop_button.style.backgroundColor = accent_color
+  stop_button.style.color = main_color
 
-  play_button.style.backgroundColor = "#ffffee"
-  play_button.style.color = "darkseagreen"
+  play_button.style.backgroundColor = main_color
+  play_button.style.color = accent_color
+
+  stop();
 });
 
-function set_github_repo() {
+async function play() {
+  try {
+      await set_repo_link();
+      create_tune();
+    } catch (error) {
+      console.error(error);
+    }
+}
+
+function stop() {
+
+}
+
+async function set_repo_link() {
   var input_val = link_input.value;
   input_val = input_val.trim().split("/");
+
+  if (input_val.length !== 3) {
+    throw new Error("expected format: author/repo/branch");
+  }
+
+  const [new_owner, new_repo, new_branch] = input_val;
+  if (owner === new_owner && repo === new_repo && branch === new_branch) {
+    return;
+  }
 
   owner = input_val[0]
   repo = input_val[1]
   branch = input_val[2]
+
+  repo_data = await get_repo_data()
 }
 
-async function verify_repo(author, repo, branch) {
-  const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches/${branch}`);
-
-  if (res.status === 404) {
-      const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
-      if (repoRes.status === 404) {
-        return { valid: false, error: `repo "${owner}/${repo}" is not found)` };
-      }
-      return { valid: false, error: `branch "${branch}" of this repo is not found` };
-    }
-
-    if (!res.ok) {
-      return { valid: false, error: `github API error: ${res.status}` };
-    }
-
-    return { valid: true };
-}
-
-async function get_commit_history() {
-  if (owner.length <= 0 || repo.length <= 0 || branch.length <= 0) return;
-
-  var commits = [];
+async function get_repo_data() {
+  if (owner.length <= 0 || repo.length <= 0 || branch.length <= 0) throw Error(`owner, repo or branch are not valid`);
   let page = 1;
   let per_page = 9;
 
-  const res = await fetch(
+  const list_res = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/commits?sha=${branch}&per_page=${per_page}&page=${page}`
   );
 
-  if(!res.ok) {
-    throw new Error(`github API error ${res.status}`);
+  if(!list_res.ok) {
+    throw new Error(`github API error ${list_res.status}`);
   }
 
-  const data = await res.json();
-  commits.push(...data);
+  const commit_list = await list_res.json();
+  const commits = await Promise.all(
+    commit_list.map(async (c) => {
+      const res = await fetch(c.url);
+      const data = await res.json();
+
+      return {
+        sha: data.sha,
+        date: data.commit.author.date,
+        message: data.commit.message,
+        additions: data.stats.additions,
+        deletions: data.stats.deletions,
+        files: data.files.map(f => f.filename),
+      };
+    })
+  );
+
+  return commits;
 }
 
-function get_commit_stats() {
-
+function create_tune() {
+  if (!repo_data || repo_data.length === 0) {
+    console.log("no repo data");
+    return
+  }
 }
