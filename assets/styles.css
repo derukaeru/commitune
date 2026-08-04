@@ -13,6 +13,13 @@ body {
     background-color: #ffffee;
 }
 
+#ps {
+    position: absolute;
+    color: darkseagreen;
+    font-size: 10px;
+    bottom: 0;
+}
+
 #main-container {
     display: grid;
     align-items: center;
@@ -43,4 +50,29 @@ body {
     border-style: none;
     outline: none;
     box-shadow: none;
+}
+
+#controls-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 4px;
+}
+
+#controls-container #play {
+    color: darkseagreen;
+    background-color: #ffffee;
+    width: 26px;
+    height: 26px;
+    border-radius: 1px;
+    border-width: 0;
+}
+
+#controls-container #stop {
+    color: darkseagreen;
+    background-color: #ffffee;
+    width: 26px;
+    height: 26px;
+    border-radius: 1px;
+    border-width: 0;
 }
