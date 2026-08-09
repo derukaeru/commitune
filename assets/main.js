@@ -35,7 +35,11 @@ stop_button.addEventListener("click", () => {
 
 async function play() {
   try {
-      await set_repo_link();
+    await set_repo_link();
+
+    if (repo_data.length === 0) {
+      return alert("this repo has no commits")
+    }
       create_tune();
     } catch (error) {
       console.error(error);
