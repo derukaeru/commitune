@@ -43,7 +43,7 @@ async function play() {
 }
 
 function stop() {
-
+  stop_tune();
 }
 
 async function set_repo_link() {
