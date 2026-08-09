@@ -10,6 +10,7 @@ var repo = "";
 var branch = "";
 
 var repo_data;
+let last_active_bar = null;
 
 var accent_color = "#382b26";
 var main_color = "#b8c2b9";
@@ -118,7 +119,7 @@ function render_bars(steps) {
     bar.dataset.index = i;
 
     var tone_index = tones.indexOf(step.note)
-    var height = remap(tone_index, 0, tones.length, 8, 40)
+    var height = remap(tone_index, 0, tones.length, 4, 48)
 
     bar.style.height = `${height}px`
     tune_visualizer.appendChild(bar)
