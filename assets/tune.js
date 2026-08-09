@@ -68,5 +68,23 @@ function get_next_pitch_index(commit, prev_index) {
 
 // get tempo from commit times
 function get_tempo(commits) {
+  const dates = commits.map(c => new Date(c.date).getTime())
+  // time is valid
+  dates = dates.filter(t => !isNaN(t)).sort((a, b) => a - b)
+
+  // too little dates
+  if (dates.length < 2) return 100;
+
+  const gaps = dates.slice(1).map((t, i) => t - dates[i]);
+  const average_gap = (gaps.reduce((a, b) => a + b, 0) / gaps.length) / 3.6e6
+
+  return Math.max(60, Math.min(160, 160 - average_gap * 2));
+}
+
+function create_tune() {
+
+}
+
+function stop_tune() {
 
 }
