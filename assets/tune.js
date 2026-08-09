@@ -24,16 +24,16 @@ let instruments = {
     return new Tone.PluckSynth().toDestination()
   },
   gd: () => {
-    return new Tone.PolySynth().toDestination()
+    return new Tone.MonoSynth().toDestination()
   },
   tscn: () => {
     return new Tone.MonoSynth().toDestination()
   },
   png: () => {
-    return new Tone.FatOscillator().toDestination()
+    return new Tone.MembraneSynth().toDestination()
   },
   default: () => {
-    return new Tone.Synth().toDestination
+    return new Tone.Synth().toDestination()
   },
 }
 
@@ -63,14 +63,12 @@ function get_next_pitch_index(commit, prev_index) {
   const net = commit.additions - commit.deletions;
   let index = prev_index + (net > 0 ? 1 : net < 0 ? -1 : 0);
 
-  return Math.max(0, Math.min(scale.lenth - 1, index));
+  return Math.max(0, Math.min(tones.length - 1, index));
 }
 
 // get tempo from commit times
 function get_tempo(commits) {
-  const dates = commits.map(c => new Date(c.date).getTime())
-  // time is valid
-  dates = dates.filter(t => !isNaN(t)).sort((a, b) => a - b)
+  const dates = commits.map(c => new Date(c.date).getTime()).filter(t => !isNaN(t)).sort((a, b) => a - b)
 
   // too little dates
   if (dates.length < 2) return 100;
@@ -82,9 +80,50 @@ function get_tempo(commits) {
 }
 
 function create_tune() {
+  if (!repo_data || repo_data.length === 0) {
+    console.error("no repo data")
+    return;
+  }
 
+  // dispose old playing tune
+  if (current_sequence) {
+    current_sequence.dispose();
+  }
+
+  active_instruments.forEach((instrument) => instrument.dispose())
+  active_instruments = []
+
+  // oldest to newest
+  const commits = [...repo_data].reverse()
+
+  Tone.Transport.bpm.value = get_tempo(commits)
+
+  // the middle scale first
+  let pitch_index = Math.floor(tones.length / 2);
+
+  const steps = commits.map(commit => {
+    pitch_index = get_next_pitch_index(commit, pitch_index)
+
+    const instrument = get_instrument(commit)
+    active_instruments.push(instrument)
+
+    return {
+      note: tones[pitch_index],
+      instrument
+    }
+  })
+
+  current_sequence = new Tone.Sequence((time, step) => {
+    step.instrument.triggerAttackRelease(step.note, "8n", time);
+  }, steps, "4n").start(0)
+
+  Tone.start().then(() => Tone.Transport.start());
 }
 
 function stop_tune() {
-
+  Tone.Transport.stop()
+  if (current_sequence) {
+    current_sequence.dispose()
+    current_sequence = null
+  }
 }

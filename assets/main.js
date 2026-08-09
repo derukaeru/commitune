@@ -51,6 +51,7 @@ async function set_repo_link() {
   input_val = input_val.trim().split("/");
 
   if (input_val.length !== 3) {
+    alert("expected format: author/repo/branch");
     throw new Error("expected format: author/repo/branch");
   }
 
@@ -75,7 +76,8 @@ async function get_repo_data() {
     `https://api.github.com/repos/${owner}/${repo}/commits?sha=${branch}&per_page=${per_page}&page=${page}`
   );
 
-  if(!list_res.ok) {
+  if (!list_res.ok) {
+    alert(`github API error ${list_res.status}`)
     throw new Error(`github API error ${list_res.status}`);
   }
 
