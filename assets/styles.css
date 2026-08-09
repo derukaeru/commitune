@@ -91,3 +91,23 @@ body {
     color: var(--accent-color);
     font-size: 10px;
 }
+
+#tune-visualizer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+}
+
+.bar {
+    width: 10px;
+    height: 30px;
+    background-color:  var(--accent-color);
+    transition: background-color 0.1s ease, transform 0.1s ease;
+}
+
+.bar.active {
+    background-color: var(--main-color);
+    transform: translateY(1.3);
+}

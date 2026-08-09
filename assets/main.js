@@ -1,4 +1,5 @@
 var link_input = document.getElementById("link-input");
+var tune_visualizer = document.getElementById("tune-visualizer");
 
 var play_button = document.getElementById("play");
 var stop_button = document.getElementById("stop");
@@ -103,4 +104,38 @@ async function get_repo_data() {
   );
 
   return commits;
+}
+
+function remap(value, inMin, inMax, outMin, outMax) {
+  return outMin + (outMax - outMin) * ((value - inMin) / (inMax - inMin));
+}
+
+function render_bars(steps) {
+  tune_visualizer.innerHTML = ""
+  steps.forEach((step, i) => {
+    const bar = document.createElement("div");
+    bar.classList.add("bar");
+    bar.dataset.index = i;
+
+    var tone_index = tones.indexOf(step.note)
+    var height = remap(tone_index, 0, tones.length, 8, 40)
+
+    bar.style.height = `${height}px`
+    tune_visualizer.appendChild(bar)
+  })
+}
+
+function highlight_bar(index) {
+  if (last_active_bar !== null) {
+    last_active_bar.classList.remove("active");
+  }
+  const bar = document.querySelector(`.bar[data-index="${index}"]`);
+  if (bar) {
+    bar.classList.add("active");
+    last_active_bar = bar;
+  }
+}
+
+function remove_bars() {
+  tune_visualizer.innerHTML = ""
 }

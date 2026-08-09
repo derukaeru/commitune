@@ -112,9 +112,18 @@ function create_tune() {
       instrument
     }
   })
+  render_bars(steps);
 
+  let step_position = 0
   current_sequence = new Tone.Sequence((time, step) => {
     step.instrument.triggerAttackRelease(step.note, "8n", time);
+
+    const index = step_position
+    Tone.Draw.schedule(() => {
+      highlight_bar(index)
+    }, time)
+    step_position = (step_position + 1) % steps.length
+
   }, steps, "4n").start(0)
 
   Tone.start().then(() => Tone.Transport.start());
@@ -126,4 +135,5 @@ function stop_tune() {
     current_sequence.dispose()
     current_sequence = null
   }
+  remove_bars()
 }
